@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agrotech Calculus: Oil Palm FFB Yield Derivatives</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen flex flex-col justify-between">
+
+    <header class="bg-emerald-700 text-white py-6 px-4 shadow-md">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div>
+                <span class="bg-emerald-900 text-emerald-200 text-xs font-semibold px-2.5 py-0.5 rounded-sm uppercase tracking-wider">SFA: Agrotech Hub</span>
+                <h1 class="text-2xl md:text-3xl font-bold mt-1">Application of Derivatives in Malaysian Palm Oil Yields</h1>
+            </div>
+            <div class="text-right text-sm text-emerald-100">
+                <p>Role: Web Developer & Bioscience Expert</p>
+                <p>Frameworks: Chart.js & Tailwind CSS</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl w-full mx-auto p-4 md:p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+        
+        <div class="lg:col-span-1 flex flex-col gap-6">
+            
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100">
+                <h2 class="text-xl font-bold text-emerald-800 mb-3 flex items-center gap-2">
+                    🌾 The Bioscience Problem
+                </h2>
+                <p class="text-sm leading-relaxed text-gray-600 mb-3">
+                    In Malaysian precision agrotech, tracking the <strong>Fresh Fruit Bunch (FFB)</strong> accumulation profile is key to optimizing fertilizer application and harvesting schedules. 
+                </p>
+                <p class="text-sm leading-relaxed text-gray-600">
+                    While the total crop mass $f(x)$ tells us current yield, its <strong>derivative $f'(x)$</strong> tells us the <em>velocity of growth</em> (tonnes/hectare/month). Pinpointing exactly when this rate peaks allows planters to maximize logistics and resource allocation before the growth rate plateaus.
+                </p>
+            </div>
+
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100">
+                <h2 class="text-xl font-bold text-emerald-800 mb-3">🧮 Mathematical Model</h2>
+                <p class="text-xs text-gray-500 mb-4">
+                    Based on typical growth dynamics from the <strong>Malaysian Palm Oil Board (MPOB) Yield Performance Reports</strong> over a 24-month localized cycle.
+                </p>
+                
+                <div class="space-y-4">
+                    <div class="bg-emerald-50 p-3 rounded-lg border-l-4 border-emerald-600">
+                        <span class="block text-xs font-bold text-emerald-700 uppercase">Cumulative FFB Weight Formula:</span>
+                        <p class="text-base font-mono font-bold mt-1 text-gray-800">
+                            f(x) = -0.003x³ + 0.12x² + 0.2x
+                        </p>
+                        <span class="block text-xs text-gray-500 mt-1">Where x = months, f(x) = Yield (tonnes/ha)</span>
+                    </div>
+
+                    <div class="bg-amber-50 p-3 rounded-lg border-l-4 border-amber-500">
+                        <span class="block text-xs font-bold text-amber-700 uppercase">Rate of Change Derivative:</span>
+                        <p class="text-base font-mono font-bold mt-1 text-gray-800">
+                            f'(x) = -0.009x² + 0.24x + 0.2
+                        </p>
+                        <span class="block text-xs text-gray-500 mt-1">Calculated via Power Rule: d/dx [xⁿ] = n·xⁿ⁻¹</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            
+            <div class="bg-white p-5 rounded-xl shadow-xs border border-gray-100 flex-grow flex flex-col justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-800">📊 24-Month Yield Trajectory & Instaneous Growth Rate</h2>
+                    <p class="text-xs text-gray-500 mb-4">💡 <strong>Action:</strong> Click anywhere on the line plot or grid to analyze that specific month's derivative.</p>
+                </div>
+                
+                <div class="relative w-full h-72 md:h-96">
+                    <canvas id="yieldChart"></canvas>
+                </div>
+            </div>
+
+            <div id="analysisBox" class="bg-slate-900 text-white p-5 rounded-xl shadow-md border-l-8 border-emerald-500 transition-all duration-300">
+                <div class="flex justify-between items-center border-b border-slate-700 pb-2 mb-3">
+                    <h3 class="font-bold text-lg text-emerald-400">🔬 Live Crop Calculus Analyzer</h3>
+                    <span id="selectedMonthTag" class="bg-emerald-500 text-slate-900 font-bold text-xs px-2.5 py-1 rounded-full">Month 12 (Default)</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Cumulative Yield f(x):</p>
+                        <p class="text-xl font-mono font-bold"><span id="calcFx" class="text-white">14.69</span> tonnes/ha</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400 uppercase tracking-wider">Instantaneous Rate f'(x):</p>
+                        <p class="text-xl font-mono font-bold text-amber-400"><span id="calcFprimeX">1.78</span> tonnes/ha/month</p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 p-3 rounded-lg border border-slate-700">
+                    <p class="text-xs text-slate-400 uppercase font-semibold tracking-wider mb-1">🌿 Layman Bio-Interpretation:</p>
+                    <p id="laymanExplanation" class="text-sm text-slate-200 italic">
+                        "At month 12, your palms are expanding their yield aggressively. For every next month that ticks by, you can expect an increase of roughly 1.78 tonnes of fresh fruit bunches per hectare."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-gray-100 text-center py-4 border-t border-gray-200 text-xs text-gray-500">
+        <p>Agrotech Yield Analytics Simulation | Framework Engine powered by Chart.js Canvas Rendering.</p>
+    </footer>
+
+    <script>
+        // 1. Math functions mapping the Agrotech Scenario
+        // Cubic model matching typical growth caps in localized setups
+        function f(x) {
+            return (-0.003 * Math.pow(x, 3)) + (0.12 * Math.pow(x, 2)) + (0.2 * x);
+        }
+
+        // Derivative using calculus power rule
+        function fPrime(x) {
+            return (-0.009 * Math.pow(x, 2)) + (0.24 * x) + 0.2;
+        }
+
+        // 2. Data Initialization for 24 months
+        const totalMonths = 24;
+        const labels = Array.from({length: totalMonths + 1}, (_, i) => i);
+        const dataFx = labels.map(x => f(x).toFixed(2));
+        const dataFPrimeX = labels.map(x => fPrime(x).toFixed(2));
+
+        // 3. ChartJS Setup with animations
+        const ctx = document.getElementById('yieldChart').getContext('2d');
+        const yieldChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Cumulative FFB Mass f(x) [tonnes/ha]',
+                        data: dataFx,
+                        borderColor: '#059669', // Emerald 600
+                        backgroundColor: 'rgba(5, 150, 105, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.3,
+                        yAxisID: 'y',
+                        fill: true
+                    },
+                    {
+                        label: "Growth Velocity f'(x) [tonnes/ha/month]",
+                        data: dataFPrimeX,
+                        borderColor: '#d97706', // Amber 600
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 1500,
+                    easing: 'easeOutQuart'
+                },
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { boxWidth: 15, font: { size: 11 } }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Timeline (Months In Production cycle)', font: { weight: 'bold' } }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: { display: true, text: 'Total FFB Mass Accumulated (t/ha)', font: { weight: 'bold' } },
+                        min: 0
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: { display: true, text: 'Instantaneous Rate of Change (t/ha/m)', font: { weight: 'bold' } },
+                        grid: { drawOnChartArea: false },
+                        min: 0
+                    }
+                },
+                onClick: (e) => {
+                    // Handle clicking logic anywhere on the chart grid canvas
+                    const points = yieldChart.getElementsAtEventForMode(e, 'index', { intersect: false }, true);
+                    if (points.length > 0) {
+                        const clickedIndex = points[0].index;
+                        updateAnalysisUI(clickedIndex);
+                    }
+                }
+            }
+        });
+
+        // 4. Interactive DOM Manipulation Engine
+        function updateAnalysisUI(month) {
+            const fxVal = f(month).toFixed(2);
+            const fPrimeVal = fPrime(month).toFixed(2);
+            
+            // Dom node mappings
+            document.getElementById('selectedMonthTag').innerText = `Month ${month}`;
+            document.getElementById('calcFx').innerText = fxVal;
+            document.getElementById('calcFprimeX').innerText = fPrimeVal;
+            
+            // Dynamic Layman Bioscience Text Generation logic
+            let interpretation = "";
+            if (fPrimeVal > 1.5) {
+                interpretation = `"At month ${month}, your palms are in their hyper-growth explosive phase. The derivative value of ${fPrimeVal} means that during this exact frame, bunch accumulation is rapidly increasing. Ensure optimal water supply and high potassium fertilizer drop rates right now to support this speed!"`;
+            } else if (fPrimeVal > 0.5 && month > 13) {
+                interpretation = `"At month ${month}, your cumulative yield is still going up, but look closely at the amber line: the derivative is slowing down (${fPrimeVal} tonnes/ha/month). The palms are reaching biological maturity. Your growth rate is leveling off, signaling planning windows for harvest logistics."`;
+            } else if (fPrimeVal <= 0.5 && month > 20) {
+                interpretation = `"At month ${month}, the derivative approaches zero (${fPrimeVal}). In agrotech terms, this represents the ceiling plateau. Growth has nearly stopped; your total weight is maxed out. It is time to harvest the crop immediately before fruit rot occurs."`;
+            } else {
+                interpretation = `"At month ${month}, the system is in its initial establishment phase. The rate of production change is gentle at ${fPrimeVal} tonnes/ha/month while root structures and initial bunch weights anchor themselves into the peat or soil matrix."`;
+            }
+            
+            document.getElementById('laymanExplanation').innerText = interpretation;
+            
+            // UI visual feedback bump
+            const box = document.getElementById('analysisBox');
+            box.classList.remove('border-emerald-500', 'border-amber-500');
+            box.classList.add(fPrimeVal > 1.3 ? 'border-emerald-500' : 'border-amber-500');
+        }
+
+        // Set default view on load to mid-cycle point (Month 12)
+        window.onload = () => {
+            updateAnalysisUI(12);
+        };
+    </script>
+</body>
+</html>
